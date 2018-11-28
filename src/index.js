@@ -1,9 +1,13 @@
-var http = require("http");
+/* eslint-disable no-console */
+const logger = require('./logger');
+const app = require('./app');
+const port = 3000;
+const server = app.listen(port);
 
-//create a server object:
-http
-  .createServer(function(req, res) {
-    res.write("Hello World!"); //write a response to the client
-    res.end(); //end the response
-  })
-  .listen(8080); //the server object listens on port 8080
+process.on('unhandledRejection', (reason, p) =>
+  logger.error('Unhandled Rejection at: Promise ', p, reason)
+);
+
+server.on('listening', () =>
+  logger.info('Feathers application started on http://%s:%d', app.get('host'), port)
+);
