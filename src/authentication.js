@@ -1,17 +1,6 @@
 const authentication = require('@feathersjs/authentication');
 const jwt = require('@feathersjs/authentication-jwt');
 const local = require('@feathersjs/authentication-local');
-const steem = require('steem');
-const nacl = require('tweetnacl'); 
-nacl.util = require('tweetnacl-util'); 
-const {SPUB, NONCE, RSECRET} = process.env;
-global.decrypt = (message) => {
-  const spub = nacl.util.decodeBase64(SPUB);
-  const rsecret = nacl.util.decodeBase64(RSECRET);
-  const bytes = nacl.box.open(nacl.util.decodeBase64(message), nacl.util.decodeBase64(NONCE), spub, rsecret);
-  const utf8 = nacl.util.encodeUTF8(bytes);
-  return JSON.parse(utf8);
-};
 
 class Verifier {
   constructor (app, options = {}) {
@@ -48,68 +37,60 @@ class Verifier {
     });
   }
 
+  async verify (req, userinfo, password, done) {
+    try {
+      const usernameField = this.options.entityUsernameField || this.options.usernameField;
+      const passwordField = this.options.entityPasswordField || this.options.passwordField;
+      const splitinfo = userinfo.split(':');
 
-  verify (req, username, password, done) {
-
-    const usernameField = this.options.entityUsernameField || this.options.usernameField;
-    var nick;
-    steem.api.getAccountHistoryAsync('dconnect', -1, 10000).then((hist)=>{
-      var users = hist.filter(block=>{
-        const transferOp = block[1].op;
-        if(transferOp[0] != 'transfer') return false;
-        if(transferOp[1].to != 'dconnect') return false;
-        if(!transferOp[1].memo.startsWith('CONNECT:')) return false;
-        if(transferOp[1].memo.split(':')[1] != username) return false;
-        if(parseFloat(transferOp[1].amount.split(' ')[0]) < 0.001) return false;
-        const name = transferOp[1].memo.split(':')[1];
-        nick = '{STEEM}:'+transferOp[1].from;
-        if(transferOp[1].memo.split(':').length == 3) {
-          const key = transferOp[1].memo.split(':')[2];
-          console.log(decrypt(key), password);
-          if(password == decrypt(key)) return true;
-        }
-        if(transferOp[1].memo.split(':').length ==  4) {
-          const key = transferOp[1].memo.split(':')[3];
-          if(nacl.sign.detached.verify(nacl.util.decodeUTF8(username), nacl.util.decodeBase64(password), nacl.util.decodeBase64(key))) {
-            return true;
-          }
-        }
-      });
+      if(splitinfo.length != 2) {
+        new Error('No network selected');
+      }
       
-      if(!users.length)throw new Error('no users found');
-      steem.api.getAccountsAsync([users.pop()[1].op[1].from]).then((users)=>{
-        this.service.find({
+      const username = splitinfo[1];
+      const option = splitinfo[0];
+      var payload;
+      switch(option){
+      case 'CREATE': 
+        await this.service.create({[usernameField]:username, [passwordField]: password});
+        if(username.length != 32 || password.length != 32) {
+          done(new Error('Bad username/password'));
+          return;
+        }
+        const response = await this.service.find({
           'query': {
-            [usernameField]: nick,
+            [usernameField]: username,
+            [passwordField]: password,
             '$limit': 1
           }
-        }).then(response => {
-          let entity;
-          const results = response.data || response;
-          if (!results.length) {
-            this.service.create({[usernameField]:nick}).then(()=>{
-              this.service.find({
-                'query': {
-                  [usernameField]: nick,
-                  '$limit': 1
-                }
-              }).then(response => {
-                entity = response.data[0];
-                const id = entity[this.service.id];
-                const payload = { [`${this.options.entity}Id`]: id };
-                done(null, entity, payload);
-              });
-            });
-          } else {
-            entity = results[0];
-            const id = entity[this.service.id];
-            const payload = { [`${this.options.entity}Id`]: id };
-            done(null, entity, payload);
+        });
+        const id = response.data[0][this.service.id];
+        payload = { [`${this.options.entity}Id`]: id };
+        done(null, response.data[0], payload);
+        break;
+      case 'SIGNIN': 
+        console.log(username, password, (await this.service.find()).data);
+        const dconnectFind = await this.service.find({
+          'query': {
+            [usernameField]: username,
+            [passwordField]: password,
+            '$limit': 1
           }
         });
-      });
-      
-    }).catch(console.error);
+        if(dconnectFind.data.length) {
+          const id = dconnectFind.data[0][this.service.id];
+          payload = { [`${this.options.entity}Id`]: id };
+          done(null, dconnectFind.data[0], payload);
+        } else {
+          done(new Error('Invalid username/password'));
+        }
+        break;
+      }
+    } catch (e) {
+      console.error(e);
+      done(e);
+      return false;
+    }
   }
 }
 

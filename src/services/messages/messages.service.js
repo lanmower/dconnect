@@ -17,5 +17,6 @@ module.exports = (name) => {
     app.use('/dapp.'+name+'.messages', createService(options));
     const service = app.service('dapp.'+name+'.messages');
     service.hooks(hooks); 
+    service.name = name;
   };
 };

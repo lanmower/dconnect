@@ -9,13 +9,13 @@ const configuration = require('@feathersjs/configuration');
 const express = require('@feathersjs/express');
 const socketio = require('@feathersjs/socketio');
 
-
 const logger = require('./logger');
 const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
-
+const steemhooks = require('./steem');
+const steem = require('steem');
 const authentication = require('./authentication');
 
 const app = express(feathers());
@@ -30,12 +30,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
+app.post('/code', function(req, res) {
+  res.json({ code: global.encrypt(req.body.code) });   
+});
 app.use('/', express.static(app.get('public')));
 
 // Set up Plugins and providers
 app.configure(express.rest());
 app.configure(socketio());
-
+app.configure(steemhooks); 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
 app.configure(authentication);

@@ -4,6 +4,13 @@ module.exports = function(app) {
     return;
   }
   
+
+  app.on('connection', connection => {
+    // On a new real-time connection, add it to the anonymous channel
+    app.channel('anonymous').join(connection);
+  });
+  
+  
   setInterval(async ()=>{
     try{
       const testOnline = (await app.service('users').find({
@@ -25,14 +32,9 @@ module.exports = function(app) {
       }
     }catch(e){console.error(e);};
   },10000);
-
-  app.on('connection', connection => {
-    // On a new real-time connection, add it to the anonymous channel
-    app.channel('anonymous').join(connection);
-  });
+ 
   
   app.on('logout', (payload, { connection }) => {
-    
     app.service('users').patch(connection.user._id, { online: false });
     if(connection) {
       //When logging out, leave all channels before joining anonymous channel
@@ -53,11 +55,24 @@ module.exports = function(app) {
       app.channel('anonymous').leave(connection);
       // Add it to the authenticated user channel
       app.channel('authenticated').join(connection);
+      app.channel(connection.user._id).join(connection);
     }
   });
 
   app.publish((data, hook) => { // eslint-disable-line no-unused-vars
     // Publish all service events to all authenticated users
+    return app.channel('authenticated').filter(connection => {
+      try { 
+        if(data.to) { 
+          if(connection.user._id != data.to) return false;
+        }
+        if(!connection.user) return false;
+        return connection.user.rooms.indexOf(hook.service.name) !== -1;
+      } catch(e) {
+        console.error(e);
+      }
+    });
+
     return app.channel('authenticated');
   });
 };

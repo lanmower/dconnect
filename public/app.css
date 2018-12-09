@@ -1,0 +1,193 @@
+/**
+ * Body CSS
+ */
+html,
+body {
+  background-color: #eee;
+  padding:0px;
+  margin:0px;
+}
+
+html,
+body,
+input,
+textarea,
+button {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+}
+
+
+/**
+ * Layout CSS
+ */
+#header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  transition: left 0.2s;
+}
+
+#dapps-menu {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  left: -50px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 2;
+  background-color: #fff;
+  transition: transform 0.2s;
+}
+
+#content-wrapper {
+  overflow-x: hidden;
+  transition: margin-left 0.2s;
+}
+
+#footer {
+  margin-left: 0px;
+  transition: margin-left 0.2s;
+}
+
+@media (min-width: 768px) {
+  #header {
+    left: 50px;
+  }
+
+  #dapps-menu {
+    transform: translate(50px);
+  }
+
+  #content-wrapper {
+    margin-left: 50px;
+  }
+
+  #footer {
+    margin-left: 50px;
+  }
+
+  body.hide-dapps-menu #header {
+    left: 0;
+  }
+
+  body.hide-dapps-menu #dapps-menu {
+    transform: translate(0px);
+  }
+
+  body.hide-dapps-menu #content-wrapper {
+    margin-left: 0;
+  }
+
+  body.hide-dapps-menu #footer {
+    margin-left: 0;
+  }
+}
+
+
+/**
+ * Toggle Side drawer
+ */
+#dapps-menu.active {
+  transform: translate(50px);
+}
+
+
+/**
+ * Header CSS
+ */
+.dapps-menu-toggle {
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 20px;
+  margin-right: 10px;
+}
+
+.dapps-menu-toggle:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+
+/**
+ * Footer CSS
+ */
+#footer {
+  background-color: #0288D1;
+  color: #fff;
+}
+
+#footer a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+iframe{
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    border: none;
+    display: block;
+    padding:0px;
+}
+
+/* ======================================= */
+/* Signup and Login */
+/* ======================================= */
+.login {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    padding:10px;
+}
+
+fieldset {
+  padding: 10px 0;
+  border:none;
+}
+
+fieldset input {
+  width: 100%;
+  padding: 1.4em 0.7em;
+}
+
+.button-primary {
+  padding-top: 1.2em;
+  padding-bottom: 1.2em;
+
+  width: 100%;
+}
+
+
+
+img.avatar {
+    border-radius: 100%;
+    height: 45px;
+    width: 45px;
+    margin-right: 10px;
+    margin-left: 5px;
+    padding: 0px;
+    margin-top: 5px;
+}
+
+#meet {
+  display: block;
+  position: fixed;
+  width: 320px;
+  height: 200px;
+  bottom: 20px;
+  right:20px;
+}
+#meet:hover {
+  display: block;
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  bottom: 20px;
+  right:20px;
+}

@@ -1,6 +1,6 @@
 {
-  "name": "feathers-chat",
-  "description": "A Feathers chat application",
+  "name": "dconnect",
+  "description": "dConnect",
   "version": "0.0.0",
   "homepage": "https://feathersjs.com",
   "main": "src",
@@ -8,8 +8,8 @@
     "feathers"
   ],
   "author": {
-    "name": "David Luecke",
-    "email": "daff@neyeon.com"
+    "name": "@lanmower",
+    "email": "narcoustics@gmail.com"
   },
   "contributors": [],
   "bugs": {},
@@ -44,7 +44,8 @@
     "steem": "^0.7.2",
     "tweetnacl": "^1.0.0",
     "tweetnacl-util": "^0.15.0",
-    "feathers-hooks-common": "^4.19.2"
+    "feathers-hooks-common": "^4.19.2",
+    "feathers-authentication-hooks": "^0.3.1"
   },
   "devDependencies": {
     "eslint": "^5.3.0",
