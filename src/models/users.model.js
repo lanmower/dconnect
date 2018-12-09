@@ -1,4 +1,3 @@
-
 const NeDB = require('nedb');
 const path = require('path');
 
@@ -10,6 +9,6 @@ module.exports = function (app) {
   }); 
 
   Model.ensureIndex({ fieldName: 'username', unique: true });
-
+ 
   return Model;
 };

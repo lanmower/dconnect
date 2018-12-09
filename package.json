@@ -1,14 +1,20 @@
 {
   "name": "dconnect",
-  "description": "",
+  "description": "dConnect",
   "version": "0.0.0",
   "homepage": "https://steemit.com/@dconnect",
   "keywords": [
     "feathers"
   ],
   "author": {
-    "name": "lanmower",
+    "name": "@lanmower",
     "email": "narcoustics@gmail.com"
+  },
+  "contributors": [],
+  "bugs": {},
+  "directories": {
+    "lib": "src",
+    "test": "test/"
   },
   "main": "src/index.js",
   "scripts": {
@@ -33,7 +39,8 @@
     "steem": "^0.7.2",
     "tweetnacl": "^1.0.0",
     "tweetnacl-util": "^0.15.0",
-    "feathers-hooks-common": "^4.19.2"
+    "feathers-hooks-common": "^4.19.2",
+    "feathers-authentication-hooks": "^0.3.1"
   },
   "devDependencies": {
     "nodemon": "1.18.4"

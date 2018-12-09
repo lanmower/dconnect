@@ -3,15 +3,15 @@ const { authenticate } = require('@feathersjs/authentication').hooks;
 const { hashPassword, protect } = require('@feathersjs/authentication-local').hooks;
 const { disallow } = require('feathers-hooks-common');
 const avatar = require('../../hooks/avatar');
-
+const hooks = require('feathers-authentication-hooks');
 module.exports = { 
   before: {
     all: [ authenticate('jwt') ],
     find: [ ],
     get: [ ],
-    create: [ disallow('external'), avatar() ],
+    create: [ disallow('external') ],
     update: [ disallow('external') ],
-    patch: [ disallow('external') ],
+    patch: [ hooks.restrictToOwner({ idField: '_id', ownerField: '_id' }) ],
     remove: [ disallow('external') ]
   },
 
@@ -23,7 +23,7 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [ ],
     remove: []
   },
 

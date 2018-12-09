@@ -1,6 +1,5 @@
-dapp.voice = {call:{}};
-const voice = dapp.voice;
-dapp.verifyBrowser = (SIPml) => {
+const voice = {call:{}};
+verifyBrowser = (SIPml) => {
   var message, link;
   if(SIPml.isWebRtcSupported()) return true;;
   // check webrtc4all version
@@ -62,7 +61,7 @@ dapp.verifyBrowser = (SIPml) => {
   return true;
 };
 
-startPhone = (username, password) => {
+startPhone = () => {
   let {SIPml, localStorage}=window;
   var oRingTone, oRingbackTone;
   var oSipStack, oSipSessionRegister, oSipSessionCall;
@@ -77,7 +76,7 @@ startPhone = (username, password) => {
   
   audioRemote = document.getElementById('audio_remote');
   
-  SIPml.setDebugLevel(dapp.sipDebug?dapp.sipDebug:'info');
+  SIPml.setDebugLevel(voice.sipDebug?voice.sipDebug:'info');
   
   var getPVal = function (PName) {
     var query = location.search.substring(1);
@@ -90,34 +89,20 @@ startPhone = (username, password) => {
     }
     return null;
   };
-  
-  oReadyStateTimer = setInterval(function () {
-    if (document.readyState === 'complete') {
-      clearInterval(oReadyStateTimer);
-      SIPml.init(postInit);
-    }
-  },
-  500);
-  
-  
-  function postInit() {
-    const browserStatus = dapp.verifyBrowser(SIPml);
+
+  voice.init = async ()=> {
+    await (new Promise(done=>{SIPml.init(done);}));
+    const browserStatus = verifyBrowser(SIPml);
     if(browserStatus !== true) {
-      dapp.dialog(browserStatus.message+'<br/><a href='+browserStatus.link+'/>Click here</a>');
+      dialog(browserStatus.message+'<br/><a href='+browserStatus.link+'/>Click here</a>');
       return;
     } 
     SIPml.setDebugLevel('error');
-    
-    sipRegister();
-  }
+  };
   
-  
-  
-  
-  function sipRegister() {
+  voice.register = ()=>{
+    let [username,password]= window.localStorage.getItem('code').split(':');
     try {
-      
-      
       var o_impu = tsip_uri.prototype.Parse(username);
       
       // enable notifications if not already done
@@ -125,11 +110,11 @@ startPhone = (username, password) => {
         window.webkitNotifications.requestPermission();
       }
       
-      SIPml.setDebugLevel(dapp.sipDebug?dapp.sipDebug:'info');
+      SIPml.setDebugLevel(voice.sipDebug?voice.sipDebug:'info');
       const config = {
         realm: 'asterisk.org',
-        impi: username,
-        impu: 'sip:'+username+'@steem.host',
+        impi: 'web.'+username,
+        impu: 'sip:web.'+username+'@steem.host',
         password: password,
         display_name: '',
         websocket_proxy_url: 'wss://steem.host:8089/ws',
@@ -156,11 +141,11 @@ startPhone = (username, password) => {
       console.log(e);
       txtRegStatus.innerHTML = e.toString();
     }
-  }
+  };
   
   sipUnRegister = () => {if (oSipStack) oSipStack.stop();};
   
-  dapp.voice.call = (address, s_type='call-audio') => {
+  voice.call = (address, s_type='call-audio') => {
     const oConfigCall = {
       audio_remote: audioRemote,
       screencast_window_id: 0x00000000, // entire desktop
@@ -270,7 +255,7 @@ startPhone = (username, password) => {
     }
     
     
-    setTimeout(function () { if (!oSipSessionCall) dapp.voice.status = ''; }, 2500);
+    setTimeout(function () { if (!oSipSessionCall) voice.status = ''; }, 2500);
   }
   
   // Callback function for SIP Stacks
@@ -290,7 +275,7 @@ startPhone = (username, password) => {
         oSipSessionRegister.register();
       }
       catch (e) {
-        dapp.voice.regstatus = e.toString();
+        voice.regstatus = e.toString();
       }
       break;
     }
@@ -307,8 +292,8 @@ startPhone = (username, password) => {
       stopRingTone();
 
 
-      dapp.voice.status = '';
-      dapp.voice.regStatus = bFailure ? 'Disconnected:' + e.description : 'Disconnected';
+      voice.status = '';
+      voice.regStatus = bFailure ? 'Disconnected:' + e.description : 'Disconnected';
       break;
     }
 
@@ -345,7 +330,8 @@ startPhone = (username, password) => {
       if (e.session == oSipSessionRegister) {
         uiOnConnectionEvent(bConnected, !bConnected);
         console.log(e);
-        dapp.voice.regstatus = 'Ready';
+        voice.regstatus = 'Ready';
+        
       }
       else if (e.session == oSipSessionCall) {
         if (bConnected) {
@@ -358,7 +344,7 @@ startPhone = (username, password) => {
           }
         }
 
-        dapp.voice.callstatus =  e.description;
+        voice.callstatus =  e.description;
 
       }
       break;
@@ -371,7 +357,7 @@ startPhone = (username, password) => {
         oSipSessionCall = null;
         oSipSessionRegister = null;
         console.log(e);
-        dapp.voice.callstatus = e.description;
+        voice.callstatus = e.description;
       }
       else if (e.session == oSipSessionCall) {
         uiCallTerminated(e.description);
@@ -387,7 +373,7 @@ startPhone = (username, password) => {
         var iSipResponseCode = e.getSipResponseCode();
         if (iSipResponseCode == 180 || iSipResponseCode == 183) {
           startRingbackTone();
-          dapp.voice.callstatus = 'Ringing...';
+          voice.callstatus = 'Ringing...';
         }
       }
       break;
@@ -397,20 +383,20 @@ startPhone = (username, password) => {
       if(e.session == oSipSessionCall){
         stopRingbackTone();
         stopRingTone();
-        dapp.voice.callstatus = 'Early media started';
+        voice.callstatus = 'Early media started';
       }
       break;
     }
 
     case 'm_remote_hold': {
       if(e.session == oSipSessionCall){
-        dapp.voice.callstatus = 'Placed on hold by remote party';
+        voice.callstatus = 'Placed on hold by remote party';
       }
       break;
     }
     case 'm_remote_resume': {
       if(e.session == oSipSessionCall){
-        dapp.voice.callstatus = 'Taken off hold by remote party';
+        voice.callstatus = 'Taken off hold by remote party';
       }
       break;
     }

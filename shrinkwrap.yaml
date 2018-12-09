@@ -9,6 +9,7 @@ dependencies:
   '@feathersjs/socketio': 3.2.7
   compression: 1.7.3
   cors: 2.8.5
+  feathers-authentication-hooks: 0.3.1
   feathers-hooks-common: 4.19.2
   feathers-nedb: 3.1.0
   helmet: 3.15.0
@@ -1243,6 +1244,16 @@ packages:
     dev: false
     resolution:
       integrity: sha512-q8BZ89jjc+mz08rSxROs8VsrBBcn1SIw1kq9NjolL509tkABRk9io01RAjSaEv1Xb2uFLt8VtRiZbGp5H8iDtg==
+  /feathers-authentication-hooks/0.3.1:
+    dependencies:
+      '@feathersjs/errors': 3.3.4
+      debug: 3.2.6
+      lodash: 4.17.11
+    dev: false
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-6jSFfXAR5/NcWTfCwGfWfzRN1IDpzRke8bZBH+nS0Yd9sHGQWhWjOlBl/SieAo2UrHa+DIEzhrCN61Yo+uAZ0g==
   /feathers-hooks-common/4.19.2:
     dependencies:
       '@feathers-plus/batch-loader': 0.3.4
@@ -3108,6 +3119,7 @@ specifiers:
   compression: ^1.7.3
   cors: ^2.8.4
   eslint: ^5.3.0
+  feathers-authentication-hooks: ^0.3.1
   feathers-hooks-common: ^4.19.2
   feathers-memory: ^2.1.3
   feathers-nedb: ^3.1.0
