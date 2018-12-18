@@ -71,7 +71,7 @@ module.exports = function(app) {
       } catch(e) {
         console.error(e);
       }
-    });
+    }); 
 
     return app.channel('authenticated');
   });

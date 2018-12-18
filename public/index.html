@@ -11,26 +11,34 @@
     </head>
   <body>
     <div id="app" class="flex flex-column"></div>
-
+    <div id="video">
+      <div id="intro" class="message">
+        Invite your friends to video call by sharing this URL.
+        <span id="roomurl"></span>
+        <br/>
+      </div>
+      <div id="tooManyParticipants" class="message">Too many participants will affect the performance of the video call.</div>      
+    </div>
     <script src="https://unpkg.com/@feathersjs/client@^3.0.0/dist/feathers.js"></script>
+  	<script src="https://webrtc.github.io/adapter/adapter-latest.js" defer></script>
     <script src="socket.io/socket.io.js"></script>
     <script src="login.js"></script>
     <script src="register.js"></script>
     <script src="app.js"></script>
-    <script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
+    <script src="https://unpkg.com/penpal/dist/penpal.min.js" crossorigin="anonymous"></script>
     <script src="dapp.js"></script>
     <script src="account.js"></script>
-    <script src="https://unpkg.com/penpal/dist/penpal.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.js"></script>
+    <script src="https://cdn.steemjs.com/lib/latest/steem.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.min.js" defer></script>
 
-    <audio id="audio_remote" autoplay="autoplay" />
+    <!--audio id="audio_remote" autoplay="autoplay" />
     <audio id="ringtone" loop src="sounds/ringtone.wav" />
     <audio id="ringbacktone" loop src="sounds/ringbacktone.wav" />
-    <audio id="dtmfTone" src="sounds/dtmf.wav" />
+    <audio id="dtmfTone" src="sounds/dtmf.wav" /-->
     <script src="https://unpkg.com/tweetnacl@1.0.0/nacl-fast.min.js" defer></script>
     <script src="https://unpkg.com/tweetnacl-util@0.15.0/nacl-util.min.js" defer></script>
-    <script type="application/x-javascript" src="https://cdn.jsdelivr.net/gh/sipml5/sipml5@master/release/SIPml-api.js" defer></script>
-    <script src="phonecontrol.js" defer></script>
-    <script src="https://meet.jit.si/external_api.js" defer></script>
+    <!--script type="application/x-javascript" src="https://cdn.jsdelivr.net/gh/sipml5/sipml5@master/release/SIPml-api.js" defer></script-->
+    <script src="video.js" defer></script>
+    <!--script src="https://meet.jit.si/external_api.js" defer></script-->
   </body>
 </html>

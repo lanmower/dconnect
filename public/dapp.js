@@ -48,13 +48,14 @@ function initDapp() {
         return client.service('dapp.'+name+'.'+service).create(data);
       },
       video:(num)=>{
-        var domain = 'meet.jit.si';
+        /*var domain = 'meet.jit.si';
         var options = {
           roomName: num,
           parentNode: document.querySelector('#meet')
         };
         var api = new JitsiMeetExternalAPI(domain, options);
-        document.getElementById('meet').style.display='block';
+        document.getElementById('meet').style.display='block';*/
+        init(num);
       },
       call:async (num)=>{
         if(!voice.started) {

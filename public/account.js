@@ -11,9 +11,13 @@ const accountHTML = `
   </p>
   <div>
   account name: @<input type="text" id="name"></input>
+  <div>
+  password:
+  <input type="password" id="password"></input>
+  </div>
   </div>
   <fieldset>
-  <textarea id="code" rows="4" cols="40"></textarea>
+  <textarea id="code" rows="6" cols="40"></textarea>
   </fieldset>
 </div>
 `;
@@ -40,22 +44,18 @@ const showAccount = async (code) => {
   async function docode() {
     const network = document.getElementById('network').value;
     const name = document.getElementById('name').value;
-    const encrypted = await encrypt(code+':'+network+':'+name);
-    document.getElementById('code').innerHTML = 'CONNECT:'+encrypted;
-  }
-
-  function encrypt(code) {
-    return new Promise(resolve =>{
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          resolve(JSON.parse(this.responseText).code);
-        }
-      };
-      xhttp.open('POST', '/code', true);
-      xhttp.setRequestHeader('Content-type', 'application/json');
-      xhttp.send(JSON.stringify({code}));
-    });
+    const username = (await client.service('users').get((await client.passport.verifyJWT(client.passport.storage['feathers-jwt'])).userId)).username;
+    const password = document.getElementById('password').value;
+    const hash = md5([username,'asterisk',password].join(':'));
+    const keys = nacl.sign.keyPair.fromSeed(nacl.util.decodeUTF8(md5(hash)));
+    const {secretKey, publicKey} = keys;
+    console.log([network,name,username].join(':'));
+    const data = nacl.util.encodeBase64(nacl.sign(nacl.util.decodeUTF8([network,name,username].join(':')), secretKey));
+    if(localStorage.getItem('pubKey') != nacl.util.encodeBase64(publicKey)) {
+      document.getElementById('code').textContent = 'Incorrect password';
+      return;
+    }
+    document.getElementById('code').textContent = 'CONNECT:'+nacl.util.encodeBase64(publicKey)+':'+data;
   }
 
   document.getElementById('app').innerHTML = accountHTML;
@@ -63,6 +63,8 @@ const showAccount = async (code) => {
   document.getElementById('network').onchange= docode;
   document.getElementById('name').onkeydown= debounce(docode, 250);
   document.getElementById('name').onchange= debounce(docode, 250);
+  document.getElementById('password').onkeydown= debounce(docode, 250);
+  document.getElementById('password').onchange= debounce(docode, 250);
   document.getElementById('code').onkeydown= (ev)=>{ev.target.select();  document.execCommand('copy');};
 };
 

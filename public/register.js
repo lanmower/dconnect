@@ -15,17 +15,19 @@ const registerHTML = `
 showRegister = async () => {
   async function signup(event) {
     try {
-      const pw = document.getElementById('pw').value;
-      const acc = String.valueOf()(new Date().getTime());
-      const id = MD5.hexdigest(String.valueOf()(new Date().getTime()));
-      const hash = MD5.hexdigest(MD5.hexdigest(acc)+':asterisk:'+pw);
+      const password = document.getElementById('pw').value;
+      const time = new Date().getTime().toString();
+      const username = md5(time);
+      const hash = md5([username,'asterisk',password].join(':'));
+      const keys = nacl.sign.keyPair.fromSeed(nacl.util.decodeUTF8(md5(hash)));
+      
       credentials = {
-        username:'CREATE:'+id,
-        password:hash
+        username:'CREATE:'+username,
+        password:nacl.util.encodeBase64(keys.publicKey)
       };
+      console.log(credentials);
       await login(credentials);
-      window.localStorage.setItem('code', id+':'+hash);
-      const user = (await client.service('users').find({query:{username:localStorage.getItem('id')}})).data.pop();
+      localStorage.setItem('pubKey', nacl.util.encodeBase64(keys.publicKey));
     } catch (e) {
       console.error(e);
     };
@@ -35,4 +37,3 @@ showRegister = async () => {
   document.getElementById('form').onsubmit = signup;
   document.getElementById('loginbutton').onclick = signup;
 };
-

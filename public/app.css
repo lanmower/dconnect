@@ -191,3 +191,56 @@ img.avatar {
   bottom: 20px;
   right:20px;
 }
+
+*{outline: none;}
+
+video {width:96px;height:auto;height:auto;object-fit: cover;
+   opacity: 0.25;
+  -webkit-transition: left 1s ease, width 1s ease, height 1s ease;
+  -moz-transition: left 1s ease, width 1s ease, height 1s ease;
+  -ms-transition: left 1s ease, width 1s ease, height 1s ease;
+  -o-transition: 1s ease, left 1s ease, width 1s ease, height 1s ease;
+  transition: 1s ease, left 1s ease, width 1s ease, height 1s ease;
+}
+#video {
+position:fixed;
+bottom:25px;
+left:50px;
+right:25px;
+}
+.video {
+  float: right;
+}
+video:hover{opacity: 1;}
+video.selected{opacity: 1 !important; width:75%; height:75%}
+		.video.one{}
+		.video.two{}
+		.video.three{}
+		.video.four{}
+		.video.six{}
+		#selfVideoWrap{}
+		#selfVideo {transform: rotateY(180deg);-webkit-transform:rotateY(180deg);-moz-transform:rotateY(180deg);}
+		#btnWrap{position: absolute;bottom:10px;left:0px;right:0px;text-align:center;z-index: 999;}
+		#mutebtn{padding:10px;margin:0px 10px;width:64px;font-size:2em;cursor: pointer;background: none;border:none;color:#fff;}
+		#videomutebtn{padding:10px;margin:0px 10px;width:64px;font-size:2em;cursor: pointer;background: none;border:none;color:#fff;}
+		.fa-microphone-slash, .fa-video-slash{color:#e74c3c!important;}
+		#roomurl{display:inline-block;border-radius: 5px;border:3px solid #dcdcdc;background: #000;font-size: 80%;padding: 5px;margin-top: 5px;}
+		.message{
+      width: 300px; 
+      position: fixed; 
+      bottom: 10px; 
+      right:10px;
+      box-sizing: border-box; 
+      padding:20px;
+       display:none;
+      border-radius: 5px;
+      z-index: 1000;}
+
+#tooManyParticipants{background: #c0392b;color: #fff;display: none;}
+
+@media only screen and (max-width: 960px) {
+  .video {float: left; width: 50vw;height: 25vh;overflow: hidden;}
+  .video.two{width: 100vw;height: 50vh;}
+  .video.three{width: 100vw;height: 33.33vh;}
+  .video.six{width: 50vw;height: 33.33vh;}
+}
