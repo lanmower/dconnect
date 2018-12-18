@@ -13,7 +13,7 @@ module.exports = function (options = {}) { // eslint-disable-line no-unused-vars
       // Messages can't be longer than 400 characters
       .substring(0, 64):'';
 
-    const metadata = (context.data.metadata&&(context.data.metadata.length<512))?context.data.metadata:'';
+    const metadata = (context.data.metadata&&(context.data.metadata.length<16384))?context.data.metadata:'';
      
     const to = context.data.to;    
     // Override the original data (so that people can't submit additional stuff)

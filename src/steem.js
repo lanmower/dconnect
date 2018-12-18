@@ -1,5 +1,6 @@
 const steem = require('steem');
-
+const nacl = require('tweetnacl');
+nacl.util = require('tweetnacl-util');
 module.exports = function(app) {
   try {
     app.steemhooks = [];
@@ -14,7 +15,7 @@ module.exports = function(app) {
         const hist = await steem.api.getAccountHistoryAsync('dconnect', total-done+1, total-done>999?999:total-done+1);
         for(let index = 0; index < hist.length; index++) {
           done++;
-          const item = hist[index]; 
+          const item = hist[index];
           if(item[1].op[0] != 'transfer') continue;
           for(hook in app.steemhooks) {
             app.steemhooks[hook](app,item);
@@ -38,18 +39,20 @@ module.exports = function(app) {
           if(transferOp[0] != 'transfer') return false;
           if(!memo.startsWith('CONNECT:')) return false;
           if(parseFloat(amount.split(' ')[0]) < 0.001) return false;
-          if(memo.split(':').length != 2) return false;
-          const code = memo.split(':')[1];
-          const decrypted = decrypt(code);
+          if(memo.split(':').length != 3) return false;
+          const publicKey = memo.split(':')[1];
+          const code = memo.split(':')[2];
+          const decrypted = nacl.util.encodeUTF8(nacl.sign.open(nacl.util.decodeBase64(code), nacl.util.decodeBase64(publicKey)));
           if(!decrypted) return;
-          if(decrypted.split(':')[2] != 'STEEM') return false;
-          if(decrypted.split(':')[3] != from) return false;
+          if(decrypted.split(':')[0] != 'STEEM') return false;
+          if(decrypted.split(':')[1] != from) return false;
           //if(decrypted.split(':')[1] != password) return false;
           return true;
         });
         if(!users.length){
           throw new Error('No valid accounts with this username/password found');
         }
+
         const transfer = users.pop();
 
         var localAccounts = await app.service('users').find({
@@ -59,17 +62,16 @@ module.exports = function(app) {
           }
         });
         const {memo} = transfer[1].op[1];
-        if(memo.split(':').length == 2) {
-          const code = memo.split(':')[1];
-          const decrypted = decrypt(code);
-          res.json({ user:decrypted.split(':')[0] });   
-        }
+        const publicKey = memo.split(':')[1];
+        const code = memo.split(':')[2];
+        const decrypted = nacl.util.encodeUTF8(nacl.sign.open(nacl.util.decodeBase64(code), nacl.util.decodeBase64(publicKey)));
+        res.json({ user:decrypted.split(':')[2] });
       } catch (e) {
         console.error(e);
-        res.json({ error:e });   
+        res.json({ error:e });
       }
     });
-    
+
     return;
   } catch(e) {
     console.error(e);
@@ -78,16 +80,16 @@ module.exports = function(app) {
 
 const rooms = [];
 const doRooms = (app, item)=>{
-  const transferOp = item[1].op;  
+  const transferOp = item[1].op;
   if(transferOp[0] =='transfer' && transferOp[1].memo.split(':').length > 2 && transferOp[1].memo.startsWith('ROOM:') && parseFloat(transferOp[1].amount.split(' ')[0]) >= 0.001) {
     const room = transferOp[1].memo;
-    const split = room.split(':'); 
+    const split = room.split(':');
     const name = split[1];
     if(rooms.indexOf(name) == -1) {
       console.log('adding room', name);
       rooms.push(name);
       const messages = app.getMessagesService(name);
-      app.configure(messages);  
+      app.configure(messages);
     }
   }
 };
@@ -95,46 +97,47 @@ const doRooms = (app, item)=>{
 function usersFromSteem(app, item) {
   if(item[1].op[0] != 'transfer') return false;
   const {memo, from, amount} = item[1].op[1];
+
   if(!memo.startsWith('CONNECT:')) return false;
   if(parseFloat(amount.split(' ')[0]) < 0.001) return false;
-  if(memo.split(':').length != 2) return false;
-  const code = memo.split(':')[1];
-  const decrypted = decrypt(code);
+  if(memo.length < 170)return;
+  console.log(memo.length);
+  if(memo.split(':').length != 3) return false;
+  const publicKey = memo.split(':')[1];
+  const code = memo.split(':')[2];
+  const decrypted = nacl.util.encodeUTF8(nacl.sign.open(nacl.util.decodeBase64(code), nacl.util.decodeBase64(publicKey)));
   if(!decrypted) return;
-  if(decrypted.split(':')[2] != 'STEEM') return false;
-  if(memo.split(':').length == 2) {
-    const code = memo.split(':')[1];
-    const decrypted = decrypt(code);
-    const username = decrypted.split(':')[0];
-    const password = decrypted.split(':')[1];
-    app.service('users').find({
-      'query': {
-        username,
-        '$limit': 1
+  if(decrypted.split(':')[0] != 'STEEM') return false;
+  if(decrypted.split(':')[1] != from) return false;
+  const username = decrypted.split(':')[2];
+  const password = publicKey;
+  app.service('users').find({
+    'query': {
+      username,
+      '$limit': 1
+    }
+  }).then(async (localAccounts)=>{
+    try {
+      const local = localAccounts.data.length?localAccounts.data[0]:null;
+      const data = {};
+      data.steemnames=local&&local.steemnames?local.steemnames:{};
+      data.steemnames[from]=data.steemnames[from]?data.steemnames[from]:{};
+      const userdata = await steem.api.getAccountsAsync([from]);
+      const profile = (userdata && userdata[0] && userdata[0].json_metadata)?JSON.parse(userdata[0].json_metadata).profile:null;
+      if(profile&&profile.profile_image) {
+        data.steemnames[from].avatar = profile.profile_image;
+        data.avatar = profile.profile_image;
       }
-    }).then(async (localAccounts)=>{
-      try { 
-        const local = localAccounts.data.length?localAccounts.data[0]:null;
-        const data = {};
-        data.steemnames=local&&local.steemnames?local.steemnames:{};
-        data.steemnames[from]=data.steemnames[from]?data.steemnames[from]:{};
-        const userdata = await steem.api.getAccountsAsync([from]);  
-        const profile = (userdata && userdata[0] && userdata[0].json_metadata)?JSON.parse(userdata[0].json_metadata).profile:null;
-        if(profile&&profile.profile_image) {
-          data.steemnames[from].avatar = profile.profile_image;
-          data.avatar =  profile.profile_image;
-        }
-        if(!(local && local.nick)) data.nick = from; 
-        if(local) {
-          if((password == local.password) || !local.password) app.service('users').patch(local._id, data).catch(console.error);
-        }
-        else {
-          data.username = username;
-          data.password = password;
-          app.service('users').create(data).catch(console.error);
-        }
-      } catch(e) {console.error(e);}
-    });
-  }
+      if(!(local && local.nick)) data.nick = from;
+      if(local) {
+        if((password == local.password) || !local.password) app.service('users').patch(local._id, data).catch(console.error);
+      }
+      else {
+        data.username = username;
+        data.password = password;
+        app.service('users').create(data).catch(console.error);
+      }
+    } catch(e) {console.error(e);}
+  });
   return false;
 }

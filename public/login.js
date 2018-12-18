@@ -45,11 +45,16 @@ function steemuser(name) {
 
 const  getCredentials = async () => {
   const username = (await steemuser(document.querySelector('[name="username"]').value)).user;
-  const password = MD5.hexdigest(username+':asterisk:'+document.querySelector('[name="password"]').value);
-  window.localStorage.setItem('code', username+':'+password);
+  const password = document.querySelector('[name="password"]').value;
+  const time = new Date().getTime().toString();
+  const hash = md5([username,'asterisk',password].join(':'));
+  const keys = nacl.sign.keyPair.fromSeed(nacl.util.decodeUTF8(md5(hash)));
+  const secretKey = keys.secretKey;
+  //window.localStorage.setItem('code', username+':'+password);
   const user = {
     username: 'SIGNIN:'+username,
-    password
+    password: nacl.util.encodeBase64(nacl.sign(nacl.util.decodeUTF8(username+':'+new Date().getTime()), secretKey))
+
   };
   return user;
 };
@@ -68,10 +73,6 @@ document.addEventListener('click', async ev => {
   }
   case 'register': {
     await showRegister();
-    break;
-  }
-  case 'logout': {
-    dapp.logout();
     break;
   }
   }

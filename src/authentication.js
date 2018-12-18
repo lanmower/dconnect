@@ -1,6 +1,8 @@
 const authentication = require('@feathersjs/authentication');
 const jwt = require('@feathersjs/authentication-jwt');
 const local = require('@feathersjs/authentication-local');
+const nacl = require('tweetnacl');
+nacl.util = require('tweetnacl-util');
 
 class Verifier {
   constructor (app, options = {}) {
@@ -9,7 +11,7 @@ class Verifier {
     this.service = typeof options.service === 'string' ? app.service(options.service) : options.service;
     this._comparePassword = this._comparePassword.bind(this);
     this.verify = this.verify.bind(this);
-  } 
+  }
 
   _comparePassword (entity, password) {
     // select entity password field - take entityPasswordField over passwordField
@@ -46,17 +48,13 @@ class Verifier {
       if(splitinfo.length != 2) {
         new Error('No network selected');
       }
-      
+
       const username = splitinfo[1];
       const option = splitinfo[0];
       var payload;
       switch(option){
-      case 'CREATE': 
+      case 'CREATE':
         await this.service.create({[usernameField]:username, [passwordField]: password});
-        if(username.length != 32 || password.length != 32) {
-          done(new Error('Bad username/password'));
-          return;
-        }
         const response = await this.service.find({
           'query': {
             [usernameField]: username,
@@ -65,25 +63,28 @@ class Verifier {
           }
         });
         const id = response.data[0][this.service.id];
-        payload = { [`${this.options.entity}Id`]: id };
+        payload = { [`${this.options.entity}Id`]: response.data[0][this.service.id]  };
         done(null, response.data[0], payload);
         break;
-      case 'SIGNIN': 
-        console.log(username, password, (await this.service.find()).data);
+      case 'SIGNIN':
         const dconnectFind = await this.service.find({
           'query': {
             [usernameField]: username,
-            [passwordField]: password,
             '$limit': 1
           }
         });
-        if(dconnectFind.data.length) {
-          const id = dconnectFind.data[0][this.service.id];
-          payload = { [`${this.options.entity}Id`]: id };
-          done(null, dconnectFind.data[0], payload);
-        } else {
-          done(new Error('Invalid username/password'));
+        if(!dconnectFind.data.length) {
+          done(new Error('User not found'));
+          return;
         }
+        const verify = nacl.sign.open(nacl.util.decodeBase64(password), nacl.util.decodeBase64(dconnectFind.data[0].password));
+        if(!verify) {
+          done(new Error('Invalid credentials'));
+          return;
+        }
+        const decrypted = nacl.util.encodeUTF8(verify);
+        payload = { [`${this.options.entity}Id`]: dconnectFind.data[0][this.service.id] };
+        done(null, dconnectFind.data[0], payload);
         break;
       }
     } catch (e) {
