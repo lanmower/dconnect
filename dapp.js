@@ -1,51 +1,41 @@
 function initDapp() {
   if(localStorage.getItem('dapps')=='[null]')localStorage.setItem('dapps','[]');
   if(!localStorage.getItem('dapps')) localStorage.setItem('dapps',JSON.stringify([]));
-  // Establish a Socket.io connection
-  const socket = io();
+
   // Initialize our Feathers client application through Socket.io
   // with hooks and authentication.
-  window.client = feathers();
-  client.configure(feathers.socketio(socket));
-  // Use localStorage to store our login token
-  client.configure(feathers.authentication({
-    storage: window.localStorage
-  }));
+  window.client = Gun(['https://gunjs.herokuapp.com/gun']).get('dconnect');
   var userId;
+
   var code = localStorage.getItem('code');
   const clients = {};
-  
-  const getSubscriptionHandler = (name, service, event) =>{
-    return (data)=>{
-      const client = clients[name];
-      if(!client) return;
-      const methods = client.methods;
-      if(methods && methods.update) clients[name].methods.update({service, event:'created', data:Object.assign(data, {})});
-    };
-  };
-
-  function doSubscribe(name, service) {
-    client.service(service).on('created', getSubscriptionHandler(name, service, 'created'));
-    client.service(service).on('patched', getSubscriptionHandler(name, service, 'patched'));
-    client.service(service).on('updated', getSubscriptionHandler(name, service, 'updated'));
-    client.service(service).on('removed', getSubscriptionHandler(name, service, 'removed'));
-  };
+  var user;
   function subscribe(name) {
     if(!clients[name]) {
-      const service = 'dapp.'+name+'.messages';
-      doSubscribe(name, 'users');
-      doSubscribe(name, service);
+      client.get(name).get('user').on(function(data, key) {
+        clients[name].methods.update('user',data,key);
+      });
+      client.get(name).get('messages').on(function(data, key) {
+        clients[name].methods.update('messages',data,key);
+      });
       clients[name] = {methods:{}};
-    } else {
+  } else {
     };
     return clients[name];
   };
 
+  function appUser = () => {
+    return client.get(name).get('users').get(username);
+  }
+
+  function globalUser = () => {
+    return client.get('users').get(username);
+  }
 
   const getMethods = (name)=> {
     return {
-      create:(service, data)=>{
-        return client.service('dapp.'+name+'.'+service).create(data);
+      create:(name, service, data)=>{
+        return client.get(name).get(service).create(data);
       },
       video:(num)=>{
         /*var domain = 'meet.jit.si';
@@ -57,7 +47,7 @@ function initDapp() {
         document.getElementById('meet').style.display='block';*/
         init(num);
       },
-      call:async (num)=>{
+      /*call:async (num)=>{
         if(!voice.started) {
           await startPhone();
           await voice.init();
@@ -65,30 +55,20 @@ function initDapp() {
           voice.started = 1;
         }
         if(voice) return voice.call(num);
-      },
-      find:async(service, limit=1000)=>{
-        let selector = await client.service(service=='users'?service:'dapp.'+name+'.'+service).find({
-          query: {
-            $sort: { createdAt: -1 },
-            $limit: limit
-          }
+      },*/
+      find:(service, limit=1000)=>{
+        return new Promise((resolve, reject)=>{
+          let selector = client.get(name).get(service).once(resolve)
         });
-        let array = [];
-        selector.data.forEach((item)=>{
-          array.push(item);
-        });
-        return array;
       },
-      logout: async()=>{
-        await client.logout();
-        document.getElementById('app').innerHTML = loginHTML;
+      logout: ()=>{
       },
       editApp: async(name)=>{
         showApp();
         openChild(name);
         openEdit(name);
       },
-      addApp: async(name)=>{
+      addApp: (name)=>{
         const dapps = JSON.parse(localStorage.getItem('dapps'));
         const room = await getRoom(name);
         let index;
@@ -116,17 +96,10 @@ function initDapp() {
     //document.getElementById('frame').children[1].style = 'padding:0px';
   };
 
-  window.login = async credentials => {
+  window.login = async {username,password} => {
     try {
-      if(!credentials) {
-        // Try to authenticate using the JWT from localStorage
-        await client.authenticate();
-      } else {
-        // If we get login information, add the strategy we want to use for login
-        const payload = Object.assign({ strategy: 'local' }, credentials);
-        await client.authenticate(payload);
-      }
-      userId = (await client.passport.verifyJWT(client.passport.storage['feathers-jwt'])).userId;
+      user = username;
+      user.auth(username, password);
       showApp();
       const urlParams = new URLSearchParams(location.search);
       if(urlParams.get('a')) {
@@ -152,26 +125,11 @@ function initDapp() {
     }
   };
 
-  const getRoom = async (roomName)=>{
-    const owners = {};
-    const hist = await steem.api.getAccountHistoryAsync('dconnect', -1 ,1000);
-    let output;
-    for(const index in hist) {
-      const transferOp = hist[index][1].op;
-      if(transferOp[0] =='transfer' && transferOp[1].memo.split(':').length >= 2 && transferOp[1].memo.startsWith('ROOM:') && parseFloat(transferOp[1].amount.split(' ')[0]) >= 0.001) {
-        const room = transferOp[1].memo;
-        const split = room.split(':');
-        const name = split[1];
-        if(name == roomName && split[1] && (!owners[name] || owners.name==transferOp[1].from)) { //only owners can update
-          output= {name:split[1],image:split.length>3?[split[2],split[3]].join(':'):''}; 
-          owners[name] = transferOp[1].fron;
-        }
-      }
-    } 
-    return output;
+  const getRoom = (roomName)=>{
+    return new Promise(resolve, reject) {
+      client.get('room').once(resolve);
+    }
   };
-
-  login();
 
   window.openChild = (name)=>{
     subscribe(name);
@@ -184,11 +142,9 @@ function initDapp() {
     }).promise.then((methods)=>{
       clients[name].methods.update = methods.update;
     });
-    client.service('users').patch(userId, {room:name});
-    //document.getElementById('frame').children[1].classList.add('col-12');
-    //document.getElementById('frame').children[1].style = 'padding:0px';
+    appUser().put({online:new Date().getTime()});
   };
-  
+
   window.updateList = (item)=>{
     const dappsjson = localStorage.getItem('dapps');
     const dapps = dappsjson?JSON.parse(dappsjson):[];
@@ -211,8 +167,7 @@ function initDapp() {
     document.getElementById('showAccount').onclick = () => {
       showAccount(code);
     };
-    client.service('users').patch(userId, {rooms:config.map(app=>{return app.name;})});
+    globalUser().put({rooms:config.map(app=>{return app.name;})});
   };
 }
 initDapp();
-

@@ -29,51 +29,27 @@ const showLogin = (error = {}) => {
   }
 };
 
-function steemuser(name) {
-  return new Promise(resolve =>{
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        resolve(JSON.parse(this.responseText));
-      }
-    };
-    xhttp.open('POST', '/steemuser', true);
-    xhttp.setRequestHeader('Content-type', 'application/json');
-    xhttp.send(JSON.stringify({name}));
-  });
-}
 
 const  getCredentials = async () => {
-  const username = (await steemuser(document.querySelector('[name="username"]').value)).user;
+  const username = document.querySelector('[name="username"]').value;
   const password = document.querySelector('[name="password"]').value;
-  const time = new Date().getTime().toString();
-  const hash = md5([username,'asterisk',password].join(':'));
-  const keys = nacl.sign.keyPair.fromSeed(nacl.util.decodeUTF8(md5(hash)));
-  const secretKey = keys.secretKey;
-  //window.localStorage.setItem('code', username+':'+password);
-  const user = {
-    username: 'SIGNIN:'+username,
-    password: nacl.util.encodeBase64(nacl.sign(nacl.util.decodeUTF8(username+':'+new Date().getTime()), secretKey))
-
-  };
-  return user;
+  return {username,password};
 };
 
 const doLogin = async () => {
   const user = await getCredentials();
   await login(user);
-  localStorage.setItem('code', user.username.replace('SIGNIN:', '')+':'+user.password);
 };
 
 document.addEventListener('click', async ev => {
   switch(ev.target.id) {
-  case 'login': {
-    await doLogin();
-    break;
-  }
-  case 'register': {
-    await showRegister();
-    break;
-  }
+    case 'login': {
+      await doLogin();
+      break;
+    }
+    case 'register': {
+      await showRegister();
+      break;
+    }
   }
 });
