@@ -40,8 +40,8 @@ function randomString(inputRandom) {
   return randomstring;
 }
 
-const get = async (key)=>{
-  const resp = await eos.getTableRows({json:true,scope:'freedomfirst',code:'freedomfirst', table:'public', table_key:'key', key_type:'name', index_position:2, lower_bound:key, upper_bound:key, limit:100});
+const get = async (key, table="public")=>{
+  const resp = await eos.getTableRows({json:true,scope:'freedomfirst',code:'freedomfirst', table, table_key:'key', key_type:'name', index_position:2, lower_bound:key, upper_bound:key, limit:100});
   if(resp.rows.length && resp.rows[0].key == key) return resp.rows[0].value;
 }
 const getHash = function (path) {
@@ -73,8 +73,9 @@ app.use(
 
 app.use('/store', async function(req, res, next) {
     var path = req.query.path;
+    var table = req.query.table||'public';
     const id = getHash(path);
-    const page = await get(id)||'';
+    const page = await get(id, table)||'';
     console.log(page);
     ipfs.pin.add(page);
     res.send('Pinning done')
