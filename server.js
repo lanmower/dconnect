@@ -50,6 +50,15 @@ const getHash = function (path) {
   return id;
 }
 
+app.use('/store', async function(req, res, next) {
+    var path = req.query.path;
+    var table = req.query.table||'public';
+    const id = getHash(path);
+    const page = await get(id, table)||'';
+    ipfs.pin.add(page);
+    res.send('Upload done:'+page)
+});
+
 app.use(express.static('public'));
 var proxy = require('express-http-proxy');
 app.use(
@@ -71,15 +80,6 @@ app.use(
   })
 );
 
-app.use('/store', async function(req, res, next) {
-    var path = req.query.path;
-    var table = req.query.table||'public';
-    const id = getHash(path);
-    const page = await get(id, table)||'';
-    console.log(page);
-    ipfs.pin.add(page);
-    res.send('Pinning done')
-});
 
 var ipfsClient = require('ipfs-http-client')
 global.ipfs = ipfsClient({ host: '127.0.0.1', port:5001, protocol: 'http' }); // Connect to IPFS
