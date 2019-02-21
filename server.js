@@ -74,8 +74,14 @@ app.use(
   '/*', 
   proxy('http://127.0.0.1:8080', {
     proxyReqPathResolver: async function (req) {
-      var path = req.query.path;
-      var table = req.query.table||'public';
+      var parts = req.url.split('?');
+      var queryparts = parts[1].split('&');
+      const query = {};
+      for(let x in queryparts) {
+        const split = queryparts[x].split('=');
+        query[split[0]] = split[1];
+      }
+      var table = query.table||'public';
       if(req.originalUrl.startsWith('/ipfs')) return req.originalUrl;
       const split = req.originalUrl.split('?')[0].split('relative/');
       const request = split[0];
