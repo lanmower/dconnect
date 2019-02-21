@@ -49,9 +49,7 @@ const get = async (key, table="public")=>{
   }
   console.log(conf);
   const resp = await eos.getTableRows(conf);
-  console.log(resp);
-
-  if(resp.rows.length && resp.rows[resp.rows.length-1].key == key) return resp.rows[resp.rows.length-1].value;
+  if(resp.rows.length) return resp.rows[resp.rows.length-1].value;
 }
 const getHash = function (path) {
   const random = new Random(hashCode(path.split('#')[0]));
