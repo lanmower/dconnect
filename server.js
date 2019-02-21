@@ -42,7 +42,7 @@ function randomString(inputRandom) {
 
 const get = async (key, table="public")=>{
   const resp = await eos.getTableRows({json:true,scope:'freedomfirst',code:'freedomfirst', table, table_key:'key', key_type:'name', index_position:2, lower_bound:key, upper_bound:key, limit:100});
-  if(resp.rows.length && resp.rows[0].key == key) return resp.rows[0].value;
+  if(resp.rows.length && resp.rows[resp.rows.length-1].key == key) return resp.rows[resp.rows.length-1].value;
 }
 const getHash = function (path) {
   const random = new Random(hashCode(path.split('#')[0]));
@@ -55,7 +55,7 @@ app.use('/store', async function(req, res, next) {
     var table = req.query.table||'public';
     const id = getHash(path);
     const page = await get(id, table)||'';
-    ipfs.pin.add(page);
+    await ipfs.pin.add(page);
     res.send('Upload done:'+page)
 });
 
@@ -65,12 +65,14 @@ app.use(
   '/*', 
   proxy('http://127.0.0.1:8080', {
     proxyReqPathResolver: async function (req) {
+      var path = req.query.path;
+      var table = req.query.table||'public';
       if(req.originalUrl.startsWith('/ipfs')) return req.originalUrl;
       const split = req.originalUrl.split('?')[0].split('relative/');
       const request = split[0];
       const relative = split.length>1?'/'+split[1]:'/';
       const id = getHash(request);
-      let page = await get(id)||'';
+      let page = await get(id, table)||'';
       if(page.length > 46) {
         const data = JSON.parse(page);
         page = data.hash;
