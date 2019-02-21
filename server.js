@@ -47,7 +47,10 @@ const get = async (key, table="public")=>{
      conf.key_type = 'name';
      conf.index_position = 2;
   }
+  console.log(conf);
   const resp = await eos.getTableRows(conf);
+  console.log(resp);
+
   if(resp.rows.length && resp.rows[resp.rows.length-1].key == key) return resp.rows[resp.rows.length-1].value;
 }
 const getHash = function (path) {
@@ -80,7 +83,6 @@ app.use(
       const id = table=='public'?getHash(request):request.slice(1,-1);
       console.log("GETTING", id, table);
       let page = await get(id, table)||'';
-      console.log(page);
       if(page.length == 46) return "http://127.0.0.1:8080/ipfs/"+page+relative;
     }
   })
