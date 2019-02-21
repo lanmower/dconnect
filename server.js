@@ -59,7 +59,7 @@ const getHash = function (path) {
 app.use('/store', async function(req, res, next) {
     var path = req.query.path;
     var table = req.query.table||'public';
-    const id = getHash(path);
+    const id = table=='public'?getHash(path):path;
     const page = await get(id, table)||'';
     await ipfs.pin.add(page);
     res.send('Upload done:'+page)
