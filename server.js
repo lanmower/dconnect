@@ -78,6 +78,7 @@ app.use(
       const request = split[0];
       const relative = split.length>1?'/'+split[1]:'/';
       const id = table=='public'?getHash(path):path;
+      console.log("GETTING", id, table);
       let page = await get(id, table)||'';
       if(page.length > 46) {
         const data = JSON.parse(page);
