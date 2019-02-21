@@ -47,7 +47,7 @@ const get = async (key, table="public")=>{
      conf.key_type = 'name';
      conf.index_position = 2;
   }
-  const resp = table == await eos.getTableRows(conf);
+  const resp = await eos.getTableRows(conf);
   if(resp.rows.length && resp.rows[resp.rows.length-1].key == key) return resp.rows[resp.rows.length-1].value;
 }
 const getHash = function (path) {
