@@ -41,7 +41,13 @@ function randomString(inputRandom) {
 }
 
 const get = async (key, table="public")=>{
-  const resp = await eos.getTableRows({json:true,scope:'freedomfirst',code:'freedomfirst', table, table_key:'key', key_type:'name', index_position:2, lower_bound:key, upper_bound:key, limit:100});
+  const conf = {json:true,scope:'freedomfirst',code:'freedomfirst', table, lower_bound:key, upper_bound:key, limit:100};
+  if(table == 'public') {
+     conf.table_key = 'key';
+     conf.key_type = 'name';
+     conf.index_position = 2;
+  }
+  const resp = table == await eos.getTableRows(conf);
   if(resp.rows.length && resp.rows[resp.rows.length-1].key == key) return resp.rows[resp.rows.length-1].value;
 }
 const getHash = function (path) {
