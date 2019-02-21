@@ -89,6 +89,7 @@ app.use(
       const id = table=='public'?getHash(request):request.slice(1,-1);
       console.log("GETTING", id, table);
       let page = await get(id, table)||'';
+      console.log(page);
       if(page.length == 46) return "http://127.0.0.1:8080/ipfs/"+page+relative;
     }
   })
