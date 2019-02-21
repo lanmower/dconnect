@@ -77,7 +77,7 @@ app.use(
       const split = req.originalUrl.split('?')[0].split('relative/');
       const request = split[0];
       const relative = split.length>1?'/'+split[1]:'/';
-      const id = getHash(request);
+      const id = table=='public'?getHash(path):path;
       let page = await get(id, table)||'';
       if(page.length > 46) {
         const data = JSON.parse(page);
