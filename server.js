@@ -41,6 +41,7 @@ function randomString(inputRandom) {
   return randomstring;
 }
 
+<<<<<<< HEAD
 const get = async (key, primary=false)=>{
   const conf = {json:true,scope:'dconnectlive',code:'dconnectlive', table:'post',  lower_bound:key, upper_bound:key, limit:1};
   if(!primary) {
@@ -50,6 +51,10 @@ const get = async (key, primary=false)=>{
   }
   const resp = await eos.getTableRows(conf);
 	console.log(resp);
+=======
+const get = async (key)=>{
+  const resp = await eos.getTableRows({json:true,scope:'dconnectlive',code:'dconnectlive', table:'post', table_key:'key', key_type:'name', index_position:2, lower_bound:key, upper_bound:key, limit:1});
+>>>>>>> master
   if(resp.rows.length && resp.rows[0].key == key) return resp.rows[0].value;
 }
 
@@ -63,11 +68,19 @@ app.use(express.static('public'));
 var proxy = require('express-http-proxy');
 
 app.use('/store', async function(req, res, next) {
+<<<<<<< HEAD
     const page = await get(req.query.primary, true)||'';
+=======
+    var path = req.query.path;
+    const id = getHash(path);
+    const page = await get(id)||'';
+    console.log(page);
+>>>>>>> master
     ipfs.pin.add(page);
     res.send('Pinning done')
 });
 
+<<<<<<< HEAD
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, "\\$&");
@@ -79,6 +92,8 @@ function getParameterByName(name, url) {
 }
 
 
+=======
+>>>>>>> master
 app.use(
   '/*', 
   proxy('http://127.0.0.1:8080', {
@@ -88,9 +103,13 @@ app.use(
       const request = split[0];
       const relative = split.length>1?'/'+split[1]:'/';
       const id = getHash(request);
+<<<<<<< HEAD
       const primary = getParameterByName('primary', req.originalUrl);
       let page = await get(id, primary)||'';
       console.log(page);
+=======
+      let page = await get(id)||'';
+>>>>>>> master
       if(page.length > 46) {
         const data = JSON.parse(page);
         page = data.hash;
@@ -104,7 +123,11 @@ var ipfsClient = require('ipfs-http-client')
 global.ipfs = ipfsClient({ host: '127.0.0.1', port:5001, protocol: 'http' }); // Connect to IPFS
 
 setInterval(async ()=>{
+<<<<<<< HEAD
   const rows = (await eosPublic.getTableRows(true, 'dconnectlive','dconnectlive', 'public', null, 0, -1, 100)).rows;
+=======
+  const rows = (await eosPublic.getTableRows(true, 'freedomfirst','freedomfirst', 'public', null, 0, -1, 100)).rows;
+>>>>>>> master
 
   for(let index in rows) {
     const row = rows[index];
