@@ -54,6 +54,16 @@ const getHash = function (path) {
 
 app.use(express.static('public'));
 var proxy = require('express-http-proxy');
+
+app.use('/store', async function(req, res, next) {
+    var path = req.query.path;
+    const id = getHash(path);
+    const page = await get(id)||'';
+    console.log(page);
+    ipfs.pin.add(page);
+    res.send('Pinning done')
+});
+
 app.use(
   '/*', 
   proxy('http://127.0.0.1:8080', {
@@ -72,15 +82,6 @@ app.use(
     }
   })
 );
-
-app.use('/store', async function(req, res, next) {
-    var path = req.query.path;
-    const id = getHash(path);
-    const page = await get(id)||'';
-    console.log(page);
-    ipfs.pin.add(page);
-    res.send('Pinning done')
-});
 
 var ipfsClient = require('ipfs-http-client')
 global.ipfs = ipfsClient({ host: '127.0.0.1', port:5001, protocol: 'http' }); // Connect to IPFS
