@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var random; 
 app.use(bodyParser.urlencoded({ extended: true }));
+
 const eos = require('eosjs')({httpEndpoint: 'http://127.0.0.1:8888', chainId:'342f1b4af05f4978a8f5d8e3e3e3761cb22dacf21a93e42abe0753bdacb6b621'});
 
 function Random(seed) {
@@ -40,69 +41,79 @@ function randomString(inputRandom) {
   return randomstring;
 }
 
-const get = async (key, table="public")=>{
-  const conf = {json:true,scope:'freedomfirst',code:'freedomfirst', table, lower_bound:key, upper_bound:key, limit:100};
-  if(table == 'public') {
-     conf.table_key = 'key';
-     conf.key_type = 'name';
-     conf.index_position = 2;
-  }
-  console.log(conf);
+const get = async (key, primary=false)=>{
+  const conf = {json:true,scope:'dconnectlive',code:'dconnectlive', table:'post',  lower_bound:key, upper_bound:key, limit:1};
+  conf.table_key='key';
+  conf.key_type='name';
+  conf.index_position=2;
   const resp = await eos.getTableRows(conf);
-  if(resp.rows.length) return resp.rows[resp.rows.length-1].value;
+	console.log(resp);
+  if(resp.rows.length && resp.rows[0].key == key) return resp.rows[0].value;
 }
+
 const getHash = function (path) {
   const random = new Random(hashCode(path.split('#')[0]));
   const id = randomString(random);
   return id;
 }
 
-app.use('/store', async function(req, res, next) {
-    var path = req.query.path;
-    var table = req.query.table||'public';
-    const id = table=='public'?getHash(path):path;
-    const page = await get(id, table)||'';
-    await ipfs.pin.add(page);
-    res.send('Upload done:'+page)
-});
-
 app.use(express.static('public'));
 var proxy = require('express-http-proxy');
+
+app.use('/store', async function(req, res, next) {
+    var path = req.query.path;
+    const id = getHash(path);
+    const page = await get(id)||'';
+    console.log(page);
+    ipfs.pin.add(page);
+    res.send('Pinning done')
+});
+
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+
 app.use(
   '/*', 
   proxy('http://127.0.0.1:8080', {
     proxyReqPathResolver: async function (req) {
-      var parts = req.url.split('?');
-      var queryparts = parts[1].split('&');
-      const query = {};
-      for(let x in queryparts) {
-        const split = queryparts[x].split('=');
-        query[split[0]] = split[1];
-      }
-      var table = query.table||'public';
       if(req.originalUrl.startsWith('/ipfs')) return req.originalUrl;
       const split = req.originalUrl.split('?')[0].split('relative/');
       const request = split[0];
       const relative = split.length>1?'/'+split[1]:'/';
-      const id = table=='public'?getHash(request):request.slice(1,-1);
-      console.log("GETTING", id, table);
-      let page = await get(id, table)||'';
+      const id = getHash(request);
+      const primary = getParameterByName('primary', req.originalUrl);
+      let page = await get(id, primary)||'';
       console.log(page);
+      if(page.length > 46) {
+        const data = JSON.parse(page);
+        page = data.hash;
+      }
       if(page.length == 46) return "http://127.0.0.1:8080/ipfs/"+page+relative;
     }
   })
 );
 
-
 var ipfsClient = require('ipfs-http-client')
 global.ipfs = ipfsClient({ host: '127.0.0.1', port:5001, protocol: 'http' }); // Connect to IPFS
 
 setInterval(async ()=>{
-  const rows = (await eosPublic.getTableRows(true, 'freedomfirst','freedomfirst', 'public', null, 0, -1, 100)).rows;
+  const rows = (await eosPublic.getTableRows(true, 'dconnectlive','dconnectlive', 'public', null, 0, -1, 100)).rows;
 
   for(let index in rows) {
     const row = rows[index];
-    setTimeout(()=>{ipfs.pin.add(row.value);},0);
+    try {
+      ipfs.pin.add(row.value);
+    } catch (e) {
+      console.error(e);
+    }
   }
 }, 86400000);
 
