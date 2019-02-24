@@ -43,9 +43,11 @@ function randomString(inputRandom) {
 
 const get = async (key, primary=false)=>{
   const conf = {json:true,scope:'dconnectlive',code:'dconnectlive', table:'post',  lower_bound:key, upper_bound:key, limit:1};
-  conf.table_key='key';
-  conf.key_type='name';
-  conf.index_position=2;
+  if(!primary) {
+    conf.table_key='key';
+    conf.key_type='name';
+    conf.index_position=2;
+  }
   const resp = await eos.getTableRows(conf);
 	console.log(resp);
   if(resp.rows.length && resp.rows[0].key == key) return resp.rows[0].value;
@@ -61,10 +63,7 @@ app.use(express.static('public'));
 var proxy = require('express-http-proxy');
 
 app.use('/store', async function(req, res, next) {
-    var path = req.query.path;
-    const id = getHash(path);
-    const page = await get(id)||'';
-    console.log(page);
+    const page = await get(req.query.primary, true)||'';
     ipfs.pin.add(page);
     res.send('Pinning done')
 });
