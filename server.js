@@ -93,7 +93,7 @@ app.use(
       const relative = split.length>1?'/'+split[1]:'/';
       const id = getHash(request);
       const primary = getParameterByName('primary', req.originalUrl);
-      let page = await get(id, primary)||'';
+      let page = (await get(id, primary)).rows[0].value;
       console.log(page);
       if(page.length > 46) {
         const data = JSON.parse(page);
