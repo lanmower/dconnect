@@ -23052,3 +23052,27 @@ SyntaxError: Unexpected token <<
     at Function.Module.runMain (module.js:693:10)
     at startup (bootstrap_node.js:188:16)
     at bootstrap_node.js:609:3
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/root/dconnect/server.js:96:51)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/root/dconnect/server.js:96:51)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/root/dconnect/server.js:96:51)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/root/dconnect/server.js:96:51)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/root/dconnect/server.js:97:51)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/root/dconnect/server.js:97:51)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:188:7)

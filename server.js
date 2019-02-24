@@ -66,10 +66,11 @@ app.use('/store', async function(req, res, next) {
     const page = (await get(req.query.primary, true)).rows[0].value;
     try {
 	await ipfs.pin.add(JSON.parse(page).hash);
+	     res.send('Pinning done');
     } catch(e) {
+	     res.send('Pinning failed');
 	    console.error(e);
     }
-    res.send('Pinning done')
 });
 
 function getParameterByName(name, url) {
@@ -93,7 +94,7 @@ app.use(
       const relative = split.length>1?'/'+split[1]:'/';
       const id = getHash(request);
       const primary = getParameterByName('primary', req.originalUrl);
-      let page = (await get(id, primary)).rows[0].value;
+      let page = (await get(primary?request.replace('/','').replace('/',''):id, primary)).rows[0].value;
       console.log(page);
       if(page.length > 46) {
         const data = JSON.parse(page);
