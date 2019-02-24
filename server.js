@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var random; 
 app.use(bodyParser.urlencoded({ extended: true }));
+
 const eos = require('eosjs')({httpEndpoint: 'http://127.0.0.1:8888', chainId:'342f1b4af05f4978a8f5d8e3e3e3761cb22dacf21a93e42abe0753bdacb6b621'});
 
 function Random(seed) {
@@ -41,9 +42,10 @@ function randomString(inputRandom) {
 }
 
 const get = async (key)=>{
-  const resp = await eos.getTableRows({json:true,scope:'freedomfirst',code:'freedomfirst', table:'public', table_key:'key', key_type:'name', index_position:2, lower_bound:key, upper_bound:key, limit:100});
+  const resp = await eos.getTableRows({json:true,scope:'dconnectlive',code:'dconnectlive', table:'post', table_key:'key', key_type:'name', index_position:2, lower_bound:key, upper_bound:key, limit:1});
   if(resp.rows.length && resp.rows[0].key == key) return resp.rows[0].value;
 }
+
 const getHash = function (path) {
   const random = new Random(hashCode(path.split('#')[0]));
   const id = randomString(random);
@@ -88,7 +90,11 @@ setInterval(async ()=>{
 
   for(let index in rows) {
     const row = rows[index];
-    setTimeout(()=>{ipfs.pin.add(row.value);},0);
+    try {
+      ipfs.pin.add(row.value);
+    } catch (e) {
+      console.error(e);
+    }
   }
 }, 86400000);
 
