@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 ##
 # You should look at the following URL's in order to grasp a solid understanding
 # of Nginx configuration files in order to fully unleash the power of Nginx.
@@ -19,10 +21,27 @@
 # Default server configuration
 #
 resolver 127.0.0.53 ipv6=off;
+>>>>>>> master
 server {
     listen 443 ssl;
     ssl_certificate /etc/letsencrypt/live/dconnect.live/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/dconnect.live/privkey.pem; # managed by Certbot
+<<<<<<< HEAD
+
+    server_name ~^(.*)\.dconnect\.live$;
+
+     location / {
+        proxy_pass http://127.0.0.1:3000/$1/relative$request_uri;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+     }
+
+    location /ws/ {
+        proxy_pass http://127.0.0.1:4004/ws/;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        client_max_body_size 100M;
+=======
     
     server_name ~^(.*)\.dconnect\.live$;
 
@@ -40,6 +59,7 @@ server {
     location /ipfs/ {
         proxy_pass http://127.0.0.1:8080/ipfs/;
 	proxy_cache_bypass $http_upgrade;
+>>>>>>> master
      }
 
     location /v1/ {
@@ -53,7 +73,11 @@ server {
 
 server {
     listen 443 ssl default_server; # managed by Certbot
+<<<<<<< HEAD
+
+=======
     
+>>>>>>> master
     ssl_certificate /etc/letsencrypt/live/dconnect.live-0001/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/dconnect.live-0001/privkey.pem; # managed by Certbot
     server_name dconnect.live;
@@ -63,10 +87,19 @@ server {
         proxy_cache_bypass $http_upgrade;
      }
 
+<<<<<<< HEAD
+    location /ws/ {
+        proxy_pass http://127.0.0.1:4004/ws/;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+     }
+
+=======
     location /ipfs/ {
         proxy_pass http://127.0.0.1:8080/ipfs/;
         proxy_cache_bypass $http_upgrade;
      }
+>>>>>>> master
     location /v1/ {
         proxy_pass http://127.0.0.1:8888/v1/;
         proxy_set_header Host $host;
@@ -76,6 +109,13 @@ server {
 }
 
 server {
+<<<<<<< HEAD
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        server_name _;
+        return 301 https://$host$request_uri;
+}
+=======
     listen 4005 ssl default_server; # managed by Certbot
 
     ssl_certificate /etc/letsencrypt/live/dconnect.live-0001/fullchain.pem; # managed by Certbot
@@ -98,3 +138,4 @@ server {
 	return 301 https://$host$request_uri;
 }
  
+>>>>>>> master

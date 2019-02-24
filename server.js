@@ -41,9 +41,16 @@ function randomString(inputRandom) {
   return randomstring;
 }
 
-const get = async (key)=>{
-  const resp = await eos.getTableRows({json:true,scope:'dconnectlive',code:'dconnectlive', table:'post', table_key:'key', key_type:'name', index_position:2, lower_bound:key, upper_bound:key, limit:1});
-  if(resp.rows.length && resp.rows[0].key == key) return resp.rows[0].value;
+const get = async (key, primary=false, reverse=false)=>{
+  const conf = {json:true,scope:'dconnectlive',code:'dconnectlive', table:'post',  lower_bound:key, upper_bound:key, limit:1, reverse};
+  if(!primary) {
+    conf.table_key='key';
+    conf.key_type='name';
+    conf.index_position=2;
+  }
+  const resp = await eos.getTableRows(conf);
+	console.log(resp);
+  return resp;
 }
 
 const getHash = function (path) {
@@ -56,13 +63,25 @@ app.use(express.static('public'));
 var proxy = require('express-http-proxy');
 
 app.use('/store', async function(req, res, next) {
-    var path = req.query.path;
-    const id = getHash(path);
-    const page = await get(id)||'';
-    console.log(page);
-    ipfs.pin.add(page);
+    const page = (await get(req.query.primary, true)).rows[0].value;
+    try {
+	await ipfs.pin.add(JSON.parse(page).hash);
+    } catch(e) {
+	    console.error(e);
+    }
     res.send('Pinning done')
 });
+
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 
 app.use(
   '/*', 
@@ -73,7 +92,9 @@ app.use(
       const request = split[0];
       const relative = split.length>1?'/'+split[1]:'/';
       const id = getHash(request);
-      let page = await get(id)||'';
+      const primary = getParameterByName('primary', req.originalUrl);
+      let page = await get(id, primary)||'';
+      console.log(page);
       if(page.length > 46) {
         const data = JSON.parse(page);
         page = data.hash;
@@ -87,7 +108,7 @@ var ipfsClient = require('ipfs-http-client')
 global.ipfs = ipfsClient({ host: '127.0.0.1', port:5001, protocol: 'http' }); // Connect to IPFS
 
 setInterval(async ()=>{
-  const rows = (await eosPublic.getTableRows(true, 'freedomfirst','freedomfirst', 'public', null, 0, -1, 100)).rows;
+  const rows = (await eosPublic.getTableRows(true, 'dconnectlive','dconnectlive', 'public', null, 0, -1, 100)).rows;
 
   for(let index in rows) {
     const row = rows[index];
