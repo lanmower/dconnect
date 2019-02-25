@@ -42,14 +42,13 @@ function randomString(inputRandom) {
 }
 
 const get = async (key, primary=false, reverse=false)=>{
-  const conf = {json:true,scope:'dconnectlive',code:'dconnectlive', table:'post',  lower_bound:key, upper_bound:key, limit:1, reverse};
+  const conf = {json:true, scope:'dconnectlive', code:'dconnectlive', table:'posts', lower_bound:key, upper_bound:key, limit:1, reverse};
   if(!primary) {
     conf.table_key='key';
     conf.key_type='name';
     conf.index_position=2;
   }
   const resp = await eos.getTableRows(conf);
-	console.log(resp);
   return resp;
 }
 
