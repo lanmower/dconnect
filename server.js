@@ -108,7 +108,7 @@ var ipfsClient = require('ipfs-http-client')
 global.ipfs = ipfsClient({ host: '127.0.0.1', port:5001, protocol: 'http' }); // Connect to IPFS
 
 setInterval(async ()=>{
-  const rows = (await eosPublic.getTableRows(true, 'dconnectlive','dconnectlive', 'public', null, 0, -1, 100)).rows;
+  const rows = (await eosPublic.getTableRows(true, 'dconnectlive','dconnectlive', 'posts', null, 0, -1, 100)).rows;
 
   for(let index in rows) {
     const row = rows[index];
