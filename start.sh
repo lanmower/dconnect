@@ -1,1 +1,1 @@
-forever start -a -o out.log -e err.log server.js 
+while true; do ./ipfs daemon && break; done
