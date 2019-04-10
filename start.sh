@@ -1,2 +1,1 @@
-forever start -a -o out.log -e err.log server.js 
-screen -dmS "ipfs" -s /bin/sh "ulimit -n 65535 && ./ipfs daemon"
+screen -dmS ipfs bash -c 'while true; do ./ipfs daemon && break; done'
