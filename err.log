@@ -32450,3 +32450,320 @@ Error: {"code":500,"message":"Internal Service Error","error":{"code":3060002,"n
     at /home/lanmower/dconnect/node_modules/eosjs-api/lib/apigen.js:112:23
     at <anonymous>
     at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+(node:13086) UnhandledPromiseRejectionWarning: ReferenceError: eosPublic is not defined
+    at Timeout.setInterval [as _onTimeout] (/home/lanmower/dconnect/server.js:111:16)
+    at ontimeout (timers.js:498:11)
+    at tryOnTimeout (timers.js:323:5)
+    at Timer.listOnTimeout (timers.js:290:5)
+(node:13086) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1)
+(node:13086) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+(node:13086) UnhandledPromiseRejectionWarning: ReferenceError: eosPublic is not defined
+    at Timeout.setInterval [as _onTimeout] (/home/lanmower/dconnect/server.js:111:16)
+    at ontimeout (timers.js:498:11)
+    at tryOnTimeout (timers.js:323:5)
+    at Timer.listOnTimeout (timers.js:290:5)
+(node:13086) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 2)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+(node:13086) UnhandledPromiseRejectionWarning: ReferenceError: eosPublic is not defined
+    at Timeout.setInterval [as _onTimeout] (/home/lanmower/dconnect/server.js:111:16)
+    at ontimeout (timers.js:498:11)
+    at tryOnTimeout (timers.js:323:5)
+    at Timer.listOnTimeout (timers.js:290:5)
+(node:13086) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 3)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+(node:8730) UnhandledPromiseRejectionWarning: ReferenceError: eosPublic is not defined
+    at Timeout.setInterval [as _onTimeout] (/home/lanmower/dconnect/server.js:111:16)
+    at ontimeout (timers.js:498:11)
+    at tryOnTimeout (timers.js:323:5)
+    at Timer.listOnTimeout (timers.js:290:5)
+(node:8730) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1)
+(node:8730) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+(node:8730) UnhandledPromiseRejectionWarning: ReferenceError: eosPublic is not defined
+    at Timeout.setInterval [as _onTimeout] (/home/lanmower/dconnect/server.js:111:16)
+    at ontimeout (timers.js:498:11)
+    at tryOnTimeout (timers.js:323:5)
+    at Timer.listOnTimeout (timers.js:290:5)
+(node:8730) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 2)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+(node:8730) UnhandledPromiseRejectionWarning: ReferenceError: eosPublic is not defined
+    at Timeout.setInterval [as _onTimeout] (/home/lanmower/dconnect/server.js:111:16)
+    at ontimeout (timers.js:498:11)
+    at tryOnTimeout (timers.js:323:5)
+    at Timer.listOnTimeout (timers.js:290:5)
+(node:8730) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 3)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+(node:32492) UnhandledPromiseRejectionWarning: ReferenceError: eosPublic is not defined
+    at Timeout.setInterval [as _onTimeout] (/home/lanmower/dconnect/server.js:111:16)
+    at ontimeout (timers.js:498:11)
+    at tryOnTimeout (timers.js:323:5)
+    at Timer.listOnTimeout (timers.js:290:5)
+(node:32492) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1)
+(node:32492) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+Error: connect ECONNREFUSED 127.0.0.1:8080
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1191:14)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
+TypeError: Cannot read property 'value' of undefined
+    at proxyReqPathResolver (/home/lanmower/dconnect/server.js:96:99)
+    at <anonymous>
+    at process._tickCallback (internal/process/next_tick.js:189:7)
